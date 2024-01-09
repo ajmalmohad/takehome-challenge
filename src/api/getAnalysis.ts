@@ -4,7 +4,6 @@ import { delay } from "./utils";
 const modelNames = modelsResponse.map((model) => model.model_name);
 console.log(modelNames);
 
-
 export const getAnalysis = async (modelName: string) => {
   let loading = true;
   let data = [];

@@ -10,7 +10,7 @@ const Analysis = () => {
   const { modelName } = useParams();
 
   if (!modelName) {
-    return <ShowError message='No model name found' />;
+    return <ShowError message="No model name found" />;
   }
 
   const [loading, setLoading] = useState<boolean>(true);
@@ -18,30 +18,37 @@ const Analysis = () => {
   const [analysis, setAnalysis] = useState<GraphData | null>(null);
 
   let parseData = (data: any): GraphData => {
-    let keys = data.filter((item: any) => item.insight_name === 'feature_list')[0].value;
+    let keys = data.filter(
+      (item: any) => item.insight_name === "feature_list",
+    )[0].value;
     let values = data
-      .filter((item: any) => item.insight_name === 'variable_ranking')
+      .filter((item: any) => item.insight_name === "variable_ranking")
       .map((item: any) => ({
         origin: item.origin,
         ...Object.fromEntries(
-          Object.entries(item.value).map(([key, value]) => [key, (parseFloat(value as string) * 100).toFixed(2)])
-        )
+          Object.entries(item.value).map(([key, value]) => [
+            key,
+            (parseFloat(value as string) * 100).toFixed(2),
+          ]),
+        ),
       }));
     return {
       keys: keys,
-      data: values
-    }
-  }
+      data: values,
+    };
+  };
 
   useEffect(() => {
-    getAnalysis(modelName).then((data) => {
-      setAnalysis(parseData(data.data[0]));
-      setLoading(false);
-    }).catch((err) => {
-      setError(err.message);
-      setLoading(false);
-    })
-  }, [])
+    getAnalysis(modelName)
+      .then((data) => {
+        setAnalysis(parseData(data.data[0]));
+        setLoading(false);
+      })
+      .catch((err) => {
+        setError(err.message);
+        setLoading(false);
+      });
+  }, []);
 
   if (loading) {
     return <Loading />;
@@ -52,7 +59,7 @@ const Analysis = () => {
   }
 
   if (!analysis) {
-    return <ShowError message='No analysis found' />;
+    return <ShowError message="No analysis found" />;
   }
 
   return (
@@ -60,7 +67,7 @@ const Analysis = () => {
       <Typography level="title-lg">{modelName}</Typography>
       <BarGraph data={analysis.data} keys={analysis.keys} />
     </div>
-  )
-}
+  );
+};
 
 export default Analysis;

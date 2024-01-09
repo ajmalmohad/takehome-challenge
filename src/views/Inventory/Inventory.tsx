@@ -15,7 +15,7 @@ interface Model {
   model_name: string;
   sk: string;
   ts_updated: number;
-};
+}
 
 const Inventory = () => {
   const [models, setModels] = useState<Model[]>([]);
@@ -23,13 +23,15 @@ const Inventory = () => {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    getModels().then((data) => {
-      setModels(data.data);
-      setLoading(false);
-    }).catch((err) => {
-      setError(err.message);
-      setLoading(false);
-    })
+    getModels()
+      .then((data) => {
+        setModels(data.data);
+        setLoading(false);
+      })
+      .catch((err) => {
+        setError(err.message);
+        setLoading(false);
+      });
   }, []);
 
   if (loading) {
@@ -42,18 +44,19 @@ const Inventory = () => {
 
   return (
     <div className="p-6 flex gap-6 flex-wrap w-full">
-      {
-        models.map((model: any, idx: number) => {
-          return <div className="flex-1">
+      {models.map((model: any, idx: number) => {
+        return (
+          <div className="flex-1">
             <ModelCard
               key={idx}
               link={`/analysis/${model.model_name}`}
-              modelName={model.model_name} modelType={model.model_type}
+              modelName={model.model_name}
+              modelType={model.model_type}
               modelVersion={model.model_version}
             />
           </div>
-        })
-      }
+        );
+      })}
     </div>
   );
 };
