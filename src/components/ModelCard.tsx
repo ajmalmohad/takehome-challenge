@@ -23,7 +23,7 @@ const ModelCard = ({
         variant="outlined"
         orientation="horizontal"
         sx={{
-          width: "100%",
+          minWidth: 260,
           "&:hover": { boxShadow: "md", borderColor: "primary.400" },
         }}
       >

@@ -46,9 +46,8 @@ const Inventory = () => {
     <div className="p-6 flex gap-6 flex-wrap w-full">
       {models.map((model: any, idx: number) => {
         return (
-          <div className="flex-1">
+          <div className="flex-1" key={idx}>
             <ModelCard
-              key={idx}
               link={`/analysis/${model.model_name}`}
               modelName={model.model_name}
               modelType={model.model_type}
