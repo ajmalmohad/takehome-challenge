@@ -7,6 +7,7 @@ const NotFound = () => {
       <Typography color="neutral" level="title-lg" variant="plain">
         404 Not Found
       </Typography>
+
       <Link to="/">
         <Button variant="outlined" color="neutral">
           Go Back

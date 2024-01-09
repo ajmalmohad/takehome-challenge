@@ -5,16 +5,9 @@ import ModelCard from "../../components/ModelCard";
 import ShowError from "../../components/ShowError";
 
 interface Model {
-  model_version: number;
-  ts_start: number;
-  ts_end: number;
-  num_categorical: number;
-  job_id: string;
-  model_type: string;
-  num_continuous: number;
   model_name: string;
-  sk: string;
-  ts_updated: number;
+  model_type: string;
+  model_version: number;
 }
 
 const Inventory = () => {
@@ -25,12 +18,17 @@ const Inventory = () => {
   useEffect(() => {
     getModels()
       .then((data) => {
+        if (!data?.data) {
+          throw new Error("No analysis for current model found");
+        }
         setModels(data.data);
         setLoading(false);
+        setError(null);
       })
       .catch((err) => {
         setError(err.message);
         setLoading(false);
+        setModels([]);
       });
   }, []);
 
@@ -44,7 +42,7 @@ const Inventory = () => {
 
   return (
     <div className="p-6 flex gap-6 flex-wrap w-full">
-      {models.map((model: any, idx: number) => {
+      {models.map((model: Model, idx: number) => {
         return (
           <div className="flex-1" key={idx}>
             <ModelCard

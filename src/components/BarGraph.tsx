@@ -1,11 +1,11 @@
 import { ResponsiveBar } from "@nivo/bar";
 
-export interface GraphData {
+export interface GraphProps {
   keys: string[];
   data: { origin: string; [key: string]: string }[];
 }
 
-const BarGraph = ({ data, keys }: GraphData) => {
+const BarGraph = ({ data, keys }: GraphProps) => {
   return (
     <div className="overflow-auto">
       <div className="flex h-[500px] min-w-[500px]">

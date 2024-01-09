@@ -3,24 +3,22 @@ import { useParams } from "react-router-dom";
 import { getAnalysis } from "../../api/getAnalysis";
 import Loading from "../../components/Loading";
 import ShowError from "../../components/ShowError";
-import BarGraph, { GraphData } from "../../components/BarGraph";
+import BarGraph, { GraphProps } from "../../components/BarGraph";
 import { Typography } from "@mui/joy";
 import { parseModelData } from "../../utils/parser";
 
 const Analysis = () => {
   const { modelName } = useParams();
-
-  if (!modelName) {
-    return <ShowError message="No model name found" />;
-  }
-
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const [analysis, setAnalysis] = useState<GraphData | null>(null);
+  const [analysis, setAnalysis] = useState<GraphProps | null>(null);
 
   useEffect(() => {
-    getAnalysis(modelName)
+    getAnalysis(modelName as string)
       .then((data) => {
+        if (!data?.data?.[0]) {
+          throw new Error("No analysis for current model found");
+        }
         setAnalysis(parseModelData(data.data[0]));
         setError(null);
         setLoading(false);
@@ -47,6 +45,7 @@ const Analysis = () => {
   return (
     <div className="p-6">
       <Typography level="title-lg">{modelName}</Typography>
+
       <BarGraph data={analysis.data} keys={analysis.keys} />
     </div>
   );
