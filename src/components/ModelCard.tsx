@@ -21,7 +21,6 @@ const ModelCard = ({
     <Link to={link}>
       <Card
         variant="outlined"
-        orientation="horizontal"
         sx={{
           minWidth: 260,
           "&:hover": { boxShadow: "md", borderColor: "primary.400" },

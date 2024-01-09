@@ -5,6 +5,7 @@ import Loading from "../../components/Loading";
 import ShowError from "../../components/ShowError";
 import BarGraph, { GraphData } from "../../components/BarGraph";
 import { Typography } from "@mui/joy";
+import { parseModelData } from "../../utils/parser";
 
 const Analysis = () => {
   const { modelName } = useParams();
@@ -17,38 +18,19 @@ const Analysis = () => {
   const [error, setError] = useState<string | null>(null);
   const [analysis, setAnalysis] = useState<GraphData | null>(null);
 
-  let parseData = (data: any): GraphData => {
-    let keys = data.filter(
-      (item: any) => item.insight_name === "feature_list",
-    )[0].value;
-    let values = data
-      .filter((item: any) => item.insight_name === "variable_ranking")
-      .map((item: any) => ({
-        origin: item.origin,
-        ...Object.fromEntries(
-          Object.entries(item.value).map(([key, value]) => [
-            key,
-            (parseFloat(value as string) * 100).toFixed(2),
-          ]),
-        ),
-      }));
-    return {
-      keys: keys,
-      data: values,
-    };
-  };
-
   useEffect(() => {
     getAnalysis(modelName)
       .then((data) => {
-        setAnalysis(parseData(data.data[0]));
+        setAnalysis(parseModelData(data.data[0]));
+        setError(null);
         setLoading(false);
       })
       .catch((err) => {
+        setAnalysis(null);
         setError(err.message);
         setLoading(false);
       });
-  }, []);
+  }, [modelName]);
 
   if (loading) {
     return <Loading />;
@@ -59,7 +41,7 @@ const Analysis = () => {
   }
 
   if (!analysis) {
-    return <ShowError message="No analysis found" />;
+    return <ShowError message="No analysis for current model found" />;
   }
 
   return (
